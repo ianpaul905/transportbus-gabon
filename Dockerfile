@@ -1,8 +1,9 @@
 FROM php:8.2-apache
 
-# Extensions PHP nécessaires (MySQL local + PostgreSQL/stratégie Render)
+# Extensions PHP nécessaires (MySQL local + PostgreSQL/Neon)
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        libzip-dev libpng-dev libjpeg-dev libfreetype6-dev libicu-dev libsqlite3-dev \
+        libpq-dev libzip-dev libpng-dev libjpeg62-turbo-dev libfreetype-dev \
+        libicu-dev icu-devtools libxml2-dev libsqlite3-dev \
         git unzip \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install pdo_mysql pdo_pgsql pgsql gd zip intl pdo_sqlite bcmath opcache \
