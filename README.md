@@ -71,6 +71,20 @@ Puis ouvrir **http://127.0.0.1:8000**.
 
 ## Installation avec MySQL (conforme au mémoire)
 
+MySQL Community **8.4.4** est déjà installé sur ce poste (version "noinstall" dans `F:\mysql-8.4.4-winx64`, base `transportbus` créée et peuplée).
+
+### Démarrer / arrêter MySQL
+
+```cmd
+F:\mysql-8.4.4-winx64\start-mysql.bat    :: démarre mysqld (aucune élévation requise)
+F:\mysql-8.4.4-winx64\stop-mysql.bat     :: l'arrête
+```
+
+- Connexion : `mysql --protocol=tcp -h127.0.0.1 -P3306 -uroot` (compte `root`, mot de passe vide en local).
+- Le `.env` de l'application pointe déjà sur MySQL : `DB_CONNECTION=mysql`, base **transportbus**, user `root`.
+
+### (Re)configurer sur un autre poste
+
 1. Installer MySQL (serveur + client) et créer la base :
    ```sql
    CREATE DATABASE transportbus CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
