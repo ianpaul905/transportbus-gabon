@@ -6,6 +6,323 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Segoe UI', ui-sans-serif, system-ui, -apple-system, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --color-brand-600: #0b7a3b;
+    --color-brand-700: #065c2c;
+    --color-brand-50: #f0fdf4;
+    --color-menu-400: #f5c518;
+}
+
+/* ---------- Base ---------- */
+@layer base {
+    body {
+        @apply bg-neutral-100 text-neutral-800 antialiased;
+        font-family: var(--font-sans);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    h1 {
+        @apply text-2xl font-bold mb-2;
+    }
+
+    h2 {
+        @apply text-xl font-bold mb-4;
+    }
+
+    label {
+        @apply block text-sm font-semibold text-neutral-700 mb-1;
+    }
+
+    input, select, textarea {
+        @apply w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-800;
+    }
+
+    input:focus, select:focus, textarea:focus {
+        @apply border-brand-600 outline-none;
+        box-shadow: 0 0 0 3px rgba(11, 122, 59, 0.15);
+    }
+
+    table {
+        @apply w-full text-sm border-collapse;
+    }
+
+    th {
+        @apply text-left px-3 py-2.5 bg-neutral-50 border-b-2 border-neutral-200 font-semibold text-neutral-600;
+    }
+
+    td {
+        @apply px-3 py-2.5 border-b border-neutral-200;
+    }
+
+    tr:hover td {
+        @apply bg-brand-50;
+    }
+}
+
+/* ---------- Composants ---------- */
+@layer components {
+    /* Barre de navigation */
+    header {
+        @apply text-white shadow-md;
+        background: linear-gradient(135deg, #0b7a3b 0%, #065c2c 100%);
+    }
+
+    header .container {
+        @apply max-w-6xl mx-auto flex items-center justify-between gap-4 flex-wrap px-6 py-3.5;
+    }
+
+    .logo {
+        @apply flex items-center gap-2 no-underline text-white font-bold text-lg;
+    }
+
+    .logo-badge {
+        @apply bg-menu-400 text-brand-700 rounded-lg px-2 py-0.5 text-sm;
+    }
+
+    nav {
+        @apply flex items-center gap-1 flex-wrap;
+    }
+
+    nav a {
+        @apply text-emerald-50 no-underline rounded-md px-3 py-2 text-sm transition-colors;
+    }
+
+    nav a:hover {
+        @apply bg-white/15;
+    }
+
+    nav .btn-inverse {
+        @apply bg-menu-400 text-brand-700 font-semibold;
+    }
+
+    nav .btn-inverse:hover {
+        @apply bg-yellow-300;
+    }
+
+    .user-badge {
+        @apply text-sm px-3 py-1.5 rounded-md bg-white/10;
+    }
+
+    main {
+        @apply flex-1 w-full max-w-6xl mx-auto px-6 py-8;
+    }
+
+    footer {
+        @apply text-center py-4 text-neutral-500 text-sm bg-white border-t border-neutral-200;
+    }
+
+    /* Carte */
+    .card {
+        @apply bg-white border border-neutral-200 rounded-xl p-6 shadow-sm;
+    }
+
+    .hero {
+        @apply text-center rounded-xl px-6 py-12 mb-6;
+        background: linear-gradient(135deg, rgba(11, 122, 59, 0.08), rgba(245, 197, 24, 0.12));
+    }
+
+    .hero h1 {
+        @apply text-4xl mb-2;
+    }
+
+    .hero p {
+        @apply text-neutral-500 mt-1 max-w-2xl mx-auto;
+    }
+
+    /* Formulaires */
+    .form-grid {
+        @apply grid gap-4;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+
+    /* Boutons */
+    .btn {
+        @apply inline-block rounded-lg px-5 py-2.5 text-sm font-semibold text-center no-underline cursor-pointer transition-all border-0 text-white;
+        background: #0b7a3b;
+    }
+
+    .btn:hover {
+        @apply opacity-90;
+    }
+
+    .btn:active {
+        @apply scale-[0.98];
+    }
+
+    .btn-jaune {
+        background: #f5c518;
+        @apply text-brand-700;
+    }
+
+    .btn-rouge {
+        @apply text-white;
+        background: #dc2626;
+    }
+
+    .btn-gris {
+        @apply text-white;
+        background: #6b7280;
+    }
+
+    .btn-secondary {
+        @apply text-neutral-800 border border-neutral-200 bg-neutral-100;
+    }
+
+    .btn-lg {
+        @apply px-7 py-3 text-base;
+    }
+
+    .btn-block {
+        @apply w-full;
+    }
+
+    .error {
+        @apply text-red-600 text-sm mt-1;
+    }
+
+    /* Alertes */
+    .alert {
+        @apply rounded-lg px-4 py-3 mb-4 text-sm;
+    }
+
+    .alert-success {
+        @apply bg-emerald-100 text-emerald-800 border border-emerald-200;
+    }
+
+    .alert-error, .alert-danger {
+        @apply bg-red-100 text-red-800 border border-red-200;
+    }
+
+    .alert-info {
+        @apply bg-blue-100 text-blue-800 border border-blue-200;
+    }
+
+    /* Badges */
+    .badge {
+        @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold;
+    }
+
+    .badge-vert {
+        @apply bg-emerald-100 text-emerald-800;
+    }
+
+    .badge-jaune {
+        @apply bg-yellow-100 text-yellow-800;
+    }
+
+    .badge-rouge {
+        @apply bg-red-100 text-red-800;
+    }
+
+    .badge-gris {
+        @apply bg-neutral-200 text-neutral-700;
+    }
+
+    .badge-bleu {
+        @apply bg-blue-100 text-blue-800;
+    }
+
+    /* Trajet */
+    .trip-card {
+        @apply flex items-center justify-between gap-4 flex-wrap rounded-xl border border-neutral-200 bg-white px-5 py-4 mb-4;
+    }
+
+    .trip-card .route {
+        @apply font-bold text-lg;
+    }
+
+    .trip-card .meta {
+        @apply text-neutral-500 text-sm mt-1;
+    }
+
+    .trip-card .prix {
+        @apply font-bold text-brand-600 text-xl;
+    }
+
+    /* Statistiques */
+    .stats-grid {
+        @apply grid gap-4 mb-6;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    }
+
+    .stat {
+        @apply bg-white border border-neutral-200 rounded-xl p-5 text-center shadow-sm;
+    }
+
+    .stat .valeur {
+        @apply text-3xl font-bold text-brand-600;
+    }
+
+    .stat .libelle {
+        @apply text-neutral-500 text-sm mt-1;
+    }
+
+    /* QR / E-billet */
+    .qr-box {
+        @apply inline-block bg-white rounded-xl border border-dashed border-neutral-300 p-5;
+    }
+
+    .ebillet {
+        @apply max-w-md mx-auto;
+    }
+
+    .split {
+        @apply grid gap-6 items-start;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    @media (max-width: 700px) {
+        .split {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Pagination */
+    .pagination {
+        @apply mt-4;
+    }
+
+    .pagination nav div {
+        @apply flex gap-1;
+    }
+
+    .pagination a, .pagination span {
+        @apply px-3 py-1.5 rounded-md border border-neutral-200 no-underline text-sm text-neutral-800;
+    }
+
+    .pagination .active {
+        @apply bg-brand-600 text-white border-brand-600;
+    }
+
+    /* Divers */
+    .texte-centre {
+        @apply text-center;
+    }
+
+    .muted {
+        @apply text-neutral-500 text-sm;
+    }
+
+    .icone-vide {
+        @apply text-center text-neutral-500 p-8;
+    }
+}
+
+/* ---------- Aides (hors layer pour priorité sur les utilitaires Tailwind) ---------- */
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+.mb-3 { margin-bottom: 1.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-3 { margin-top: 1.5rem; }
+
+.flex { display: flex; gap: 0.6rem; align-items: center; }
+
+.flex-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
 }

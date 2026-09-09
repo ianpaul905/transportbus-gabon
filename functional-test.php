@@ -11,6 +11,13 @@
  * Sortie : une ligne « PASS » / « FAIL » par cas de test, puis un bilan.
  */
 
+// --- Bootstrap Laravel + remise à zéro des données de test ---
+require __DIR__ . '/vendor/autoload.php';
+$app = require __DIR__ . '/bootstrap/app.php';
+$app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+\App\Models\Reservation::query()->delete();
+\App\Models\Payment::query()->delete();
+
 $base = getenv('APP_URL_TEST') ?: 'http://127.0.0.1:8000';
 
 $PASS = 0;
