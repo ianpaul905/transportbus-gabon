@@ -141,6 +141,26 @@ functional-test.php      tests fonctionnels autonomes
 
 ---
 
+## Déploiement en ligne (Render)
+
+Le projet contient un **Dockerfile** (PHP 8.2 + Apache + extensions MySQL/PostgreSQL) et un **Blueprint** `render.yaml` : tout est prêt pour un déploiement « Blueprint » en 1 clic.
+
+### Procédure manuelle (dashboard)
+1. Créer un compte gratuit sur **render.com** et connecter le compte **GitHub** `ianpaul905`.
+2. **New → Blueprint** → choisir le dépôt `ianpaul905/transportbus-gabon`.
+3. Render lit `render.yaml` et crée :
+   - le Web Service `transportbus-gabon` (Docker) ;
+   - la base **PostgreSQL** `transportbus-db` (gratuite, plan free).
+4. Renseigner `APP_URL` (l'URL `*.onrender.com` donnée) et, au premier déploiement, `APP_KEY`.
+   - L'entrypoint génère la clé et lance `php artisan migrate --force` automatiquement.
+5. **Manual Deploy → Deploy branch** → attendre le build, puis ouvrir l'URL.
+
+### Choix de la base
+- En local / mémoire : **MySQL 8.4** (`.env` = `DB_CONNECTION=mysql`).
+- Sur Render : **PostgreSQL** gratuit (`.env` = `DB_CONNECTION=pgsql` + `DATABASE_URL`). Les migrations sont compatibles (Eloquent / SQL).
+
+---
+
 ## Notes
 
 - Le paiement Mobile Money est une **simulation** (conforme au mémoire : intégration en environnement de simulation, en attendant un partenariat opérateur réel).
