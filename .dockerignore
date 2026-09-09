@@ -1,0 +1,16 @@
+.git
+.gitignore
+.github
+.vscode
+.idea
+node_modules
+vendor
+storage/logs/*
+functional-test.php
+tests/Feature
+tests/Unit
+tests/TestCase.php
+.env
+.env.*
+Thumbs.db
+*.log

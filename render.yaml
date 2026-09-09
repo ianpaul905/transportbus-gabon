@@ -1,0 +1,41 @@
+services:
+  - type: web
+    name: transportbus-gabon
+    runtime: docker
+    repo: https://github.com/ianpaul905/transportbus-gabon
+    plan: free
+    region: oregon
+    healthCheckPath: /
+    envVars:
+      - key: APP_NAME
+        value: TransportBus Gabon
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_URL
+        sync: false
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DATABASE_URL
+        fromDatabase:
+          name: transportbus-db
+          property: connectionString
+      - key: APP_KEY
+        sync: false
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: SESSION_DRIVER
+        value: database
+      - key: QUEUE_CONNECTION
+        value: sync
+      - key: APP_LOCALE
+        value: fr
+      - key: APP_FAKER_LOCALE
+        value: fr_FR
+
+  - type: postgresql
+    name: transportbus-db
+    plan: free
+    databaseName: transportbus
+    user: transportbus
