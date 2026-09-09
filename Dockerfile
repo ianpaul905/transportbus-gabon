@@ -11,6 +11,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
+# Node.js (pour Vite/front-end)
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
+    && apt-get install -y --no-install-recommends nodejs \
+    && rm -rf /var/lib/apt/lists/*
+
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
 WORKDIR /var/www/html
@@ -20,6 +25,9 @@ COPY . .
 
 # Dépendances production
 RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+
+# Compilation des assets front-end (Tailwind/Vite)
+RUN npm ci --no-audit --no-fund && npm run build
 
 # Permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
