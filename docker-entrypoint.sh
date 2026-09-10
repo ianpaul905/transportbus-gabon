@@ -33,4 +33,7 @@ php -r '
 '
 php artisan migrate --force
 
+# Données de démonstration (idempotente : ne crée pas de doublons)
+php artisan db:seed --force
+
 exec "$@"

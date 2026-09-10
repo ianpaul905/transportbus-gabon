@@ -19,6 +19,18 @@ RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
+# Réglages par défaut (Render applique les env secrets : DATABASE_URL, APP_KEY)
+ENV APP_NAME="TransportBus Gabon" \
+    APP_ENV=production \
+    APP_DEBUG=false \
+    APP_URL=https://transportbus-gabon.onrender.com \
+    APP_LOCALE=fr \
+    APP_FAKER_LOCALE=fr_FR \
+    DB_CONNECTION=pgsql \
+    LOG_CHANNEL=stderr \
+    SESSION_DRIVER=database \
+    QUEUE_CONNECTION=sync
+
 WORKDIR /var/www/html
 
 # Copie de l'application

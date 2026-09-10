@@ -12,50 +12,60 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $admin = User::create([
-            'name' => 'Administrateur Principal',
-            'email' => 'admin@transportbus.ga',
-            'password' => bcrypt('password123'),
-            'telephone' => '+241 07 00 00 01',
-            'role' => 'admin',
-        ]);
+        $admin = User::updateOrCreate(
+            ['email' => 'admin@transportbus.ga'],
+            [
+                'name' => 'Administrateur Principal',
+                'password' => bcrypt('password123'),
+                'telephone' => '+241 07 00 00 01',
+                'role' => 'admin',
+            ],
+        );
 
-        $controleur = User::create([
-            'name' => 'Contrôleur Major Transport',
-            'email' => 'controleur@transportbus.ga',
-            'password' => bcrypt('password123'),
-            'telephone' => '+241 07 00 00 02',
-            'role' => 'controleur',
-        ]);
+        $controleur = User::updateOrCreate(
+            ['email' => 'controleur@transportbus.ga'],
+            [
+                'name' => 'Contrôleur Major Transport',
+                'password' => bcrypt('password123'),
+                'telephone' => '+241 07 00 00 02',
+                'role' => 'controleur',
+            ],
+        );
 
-        $client = User::create([
-            'name' => 'Client Démo',
-            'email' => 'client@transportbus.ga',
-            'password' => bcrypt('password123'),
-            'telephone' => '+241 07 00 00 03',
-            'role' => 'client',
-        ]);
+        $client = User::updateOrCreate(
+            ['email' => 'client@transportbus.ga'],
+            [
+                'name' => 'Client Démo',
+                'password' => bcrypt('password123'),
+                'telephone' => '+241 07 00 00 03',
+                'role' => 'client',
+            ],
+        );
 
-        $agency = Agency::create([
-            'nom' => 'Major Transport',
-            'ville' => 'Libreville',
-            'adresse' => 'Gare routière de Nkembo',
-            'telephone' => '+241 01 12 34 56',
-        ]);
+        $agency = Agency::firstOrCreate(
+            ['nom' => 'Major Transport'],
+            [
+                'ville' => 'Libreville',
+                'adresse' => 'Gare routière de Nkembo',
+                'telephone' => '+241 01 12 34 56',
+            ],
+        );
 
-        $agency2 = Agency::create([
-            'nom' => 'Transporteur Voyages',
-            'ville' => 'Libreville',
-            'adresse' => 'Croisement Bouet',
-            'telephone' => '+241 01 98 76 54',
-        ]);
+        $agency2 = Agency::firstOrCreate(
+            ['nom' => 'Transporteur Voyages'],
+            [
+                'ville' => 'Libreville',
+                'adresse' => 'Croisement Bouet',
+                'telephone' => '+241 01 98 76 54',
+            ],
+        );
 
         $buses = [
-            Bus::create(['immatriculation' => 'AB-101', 'nombre_places' => 40, 'statut' => 'actif', 'agency_id' => $agency->id, 'classe' => 'VIP']),
-            Bus::create(['immatriculation' => 'AB-102', 'nombre_places' => 35, 'statut' => 'actif', 'agency_id' => $agency->id, 'classe' => 'VIP']),
-            Bus::create(['immatriculation' => 'AB-103', 'nombre_places' => 40, 'statut' => 'en_maintenance', 'agency_id' => $agency->id, 'classe' => null]),
-            Bus::create(['immatriculation' => 'TV-201', 'nombre_places' => 45, 'statut' => 'actif', 'agency_id' => $agency2->id, 'classe' => null]),
-            Bus::create(['immatriculation' => 'TV-202', 'nombre_places' => 38, 'statut' => 'actif', 'agency_id' => $agency2->id, 'classe' => 'VIP']),
+            Bus::firstOrCreate(['immatriculation' => 'AB-101'], ['nombre_places' => 40, 'statut' => 'actif', 'agency_id' => $agency->id, 'classe' => 'VIP']),
+            Bus::firstOrCreate(['immatriculation' => 'AB-102'], ['nombre_places' => 35, 'statut' => 'actif', 'agency_id' => $agency->id, 'classe' => 'VIP']),
+            Bus::firstOrCreate(['immatriculation' => 'AB-103'], ['nombre_places' => 40, 'statut' => 'en_maintenance', 'agency_id' => $agency->id, 'classe' => null]),
+            Bus::firstOrCreate(['immatriculation' => 'TV-201'], ['nombre_places' => 45, 'statut' => 'actif', 'agency_id' => $agency2->id, 'classe' => null]),
+            Bus::firstOrCreate(['immatriculation' => 'TV-202'], ['nombre_places' => 38, 'statut' => 'actif', 'agency_id' => $agency2->id, 'classe' => 'VIP']),
         ];
 
         $trajets = [
@@ -76,28 +86,30 @@ class DatabaseSeeder extends Seeder
             ['Oyem', 'Libreville', 3, 9, 17000],
         ];
 
-        foreach ($trajets as [$depart, $arrivee, $jours, $heure, $prix]) {
-            $bus = $buses[array_rand($buses)];
-            Trip::create([
-                'ville_depart' => $depart,
-                'ville_arrivee' => $arrivee,
-                'date_depart' => now()->addDays($jours)->toDateString(),
-                'heure_depart' => sprintf('%02d:00:00', $heure),
-                'prix' => $prix,
-                'bus_id' => $bus->id,
-            ]);
-
-            // Un second départ le même jour avec un autre bus
-            if (in_array($depart . $arrivee, ['LibrevilleMouila', 'LibrevilleOyem', 'LibrevilleFranceville'])) {
-                $bus2 = $buses[2];
+        if (Trip::count() === 0) {
+            foreach ($trajets as [$depart, $arrivee, $jours, $heure, $prix]) {
+                $bus = $buses[array_rand($buses)];
                 Trip::create([
                     'ville_depart' => $depart,
                     'ville_arrivee' => $arrivee,
                     'date_depart' => now()->addDays($jours)->toDateString(),
-                    'heure_depart' => sprintf('%02d:00:00', $heure + 2),
+                    'heure_depart' => sprintf('%02d:00:00', $heure),
                     'prix' => $prix,
-                    'bus_id' => $bus2->id,
+                    'bus_id' => $bus->id,
                 ]);
+
+                // Un second départ le même jour avec un autre bus
+                if (in_array($depart . $arrivee, ['LibrevilleMouila', 'LibrevilleOyem', 'LibrevilleFranceville'])) {
+                    $bus2 = $buses[2];
+                    Trip::create([
+                        'ville_depart' => $depart,
+                        'ville_arrivee' => $arrivee,
+                        'date_depart' => now()->addDays($jours)->toDateString(),
+                        'heure_depart' => sprintf('%02d:00:00', $heure + 2),
+                        'prix' => $prix,
+                        'bus_id' => $bus2->id,
+                    ]);
+                }
             }
         }
     }
