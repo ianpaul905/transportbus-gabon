@@ -1,6 +1,12 @@
 #!/bin/sh
 set -e
 
+# Neon : brancher l'endpoint DIRECT (sans pooler) - le pooler casse les migrations
+if [ -n "$DATABASE_URL" ]; then
+    DATABASE_URL=$(printf '%s' "$DATABASE_URL" | sed 's/-pooler//')
+    export DATABASE_URL
+fi
+
 # Génère la clé APP_KEY si absente
 if [ -z "${APP_KEY:-}" ] || [ "${APP_KEY:-null}" = "null" ]; then
     php artisan key:generate --force
