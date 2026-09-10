@@ -86,7 +86,13 @@ return [
 
         'pgsql' => [
             'driver' => 'pgsql',
-            'url' => env('DATABASE_URL', env('DB_URL')),
+            'url' => (function () {
+                $url = env('DATABASE_URL', env('DB_URL'));
+                if (is_string($url) && str_contains((string) $url, 'sslmode')) {
+                    return preg_replace('/sslmode=[a-zA-Z]+/', 'sslmode=require', $url);
+                }
+                return $url;
+            })(),
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '5432'),
             'database' => env('DB_DATABASE', 'laravel'),
