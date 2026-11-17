@@ -66,7 +66,7 @@
                         <form method="POST" action="{{ route('admin.bus.update', $b->id) }}">
                             @csrf
                             @method('PATCH')
-                            <select name="statut" onchange="this.form.submit()">
+                            <select name="statut" data-auto-submit>
                                 <option value="actif" @selected($b->statut === 'actif')>Actif</option>
                                 <option value="en_maintenance" @selected($b->statut === 'en_maintenance')>Maintenance</option>
                                 <option value="hors_service" @selected($b->statut === 'hors_service')>Hors service</option>

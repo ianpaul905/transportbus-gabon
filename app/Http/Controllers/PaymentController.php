@@ -12,6 +12,8 @@ class PaymentController extends Controller
 {
     public function form(Reservation $reservation, MobileMoneyService $service)
     {
+        $this->autoriserAcces($reservation);
+
         if (! in_array($reservation->statut, ['en_attente', 'confirmee'])) {
             return redirect()->route('home')->with('error', 'Cette réservation n\'est plus modifiable.');
         }
@@ -24,6 +26,8 @@ class PaymentController extends Controller
 
     public function initier(Request $request, Reservation $reservation, MobileMoneyService $service)
     {
+        $this->autoriserAcces($reservation);
+
         $validated = $request->validate([
             'telephone' => 'required|string|max:20',
             'mode_paiement' => 'required|in:airtel_money,moov_money',
@@ -59,6 +63,8 @@ class PaymentController extends Controller
 
     public function confirmer(Reservation $reservation, MobileMoneyService $service, QrCodeService $qr)
     {
+        $this->autoriserAcces($reservation);
+
         $payment = $reservation->payment;
 
         if ($payment && $payment->statut === 'en_attente') {
@@ -90,8 +96,21 @@ class PaymentController extends Controller
 
     public function eBillet(Reservation $reservation, QrCodeService $qr)
     {
+        $this->autoriserAcces($reservation);
+
         abort_unless($reservation->statut === 'confirmee', 404, 'E-billet non disponible.');
 
         return view('payment.ebillet', compact('reservation', 'qr'));
+    }
+
+    private function autoriserAcces(Reservation $reservation): void
+    {
+        $utilisateur = auth()->user();
+
+        $proprietaire = $utilisateur !== null && (int) $reservation->user_id === (int) $utilisateur->id;
+        $enSession = in_array($reservation->id, session()->get('reservations', []), true);
+        $staff = $utilisateur !== null && ($utilisateur->isAdmin() || $utilisateur->isControleur());
+
+        abort_unless($proprietaire || $enSession || $staff, 403, 'Accès à cette réservation non autorisé.');
     }
 }

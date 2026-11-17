@@ -54,6 +54,14 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    'admin_email' => env('ADMIN_EMAIL'),
+
+    'admin_password' => env('ADMIN_PASSWORD'),
+
+    'controleur_email' => env('CONTROLEUR_EMAIL'),
+
+    'controleur_password' => env('CONTROLEUR_PASSWORD'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

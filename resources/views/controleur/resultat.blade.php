@@ -36,7 +36,7 @@
         <form method="POST" action="{{ route('controleur.embarquer', $reservation->id) }}" class="mt-2">
             @csrf
             <button type="submit" class="btn btn-lg btn-jaune btn-block" style="color:#000"
-                    onclick="return confirm('Valider l\'embarquement de {{ $reservation->client_nom }} ?');">
+                    data-confirm="Valider l'embarquement de {{ $reservation->client_nom }} ?">
                 ✅ Valider l'embarquement
             </button>
         </form>

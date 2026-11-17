@@ -52,7 +52,7 @@
     </div>
 
     <div class="mt-2" style="display:flex;gap:0.6rem;justify-content:center;flex-wrap:wrap">
-        <button class="btn btn-jaune" style="color:#000" onclick="window.print()">Imprimer</button>
+        <button class="btn btn-jaune" style="color:#000" data-print>Imprimer</button>
         <a href="{{ route('home') }}" class="btn btn-secondary">Retour à l'accueil</a>
     </div>
 </div>

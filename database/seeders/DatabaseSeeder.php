@@ -12,35 +12,7 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $admin = User::updateOrCreate(
-            ['email' => 'admin@transportbus.ga'],
-            [
-                'name' => 'Administrateur Principal',
-                'password' => bcrypt('password123'),
-                'telephone' => '+241 07 00 00 01',
-                'role' => 'admin',
-            ],
-        );
-
-        $controleur = User::updateOrCreate(
-            ['email' => 'controleur@transportbus.ga'],
-            [
-                'name' => 'Contrôleur Major Transport',
-                'password' => bcrypt('password123'),
-                'telephone' => '+241 07 00 00 02',
-                'role' => 'controleur',
-            ],
-        );
-
-        $client = User::updateOrCreate(
-            ['email' => 'client@transportbus.ga'],
-            [
-                'name' => 'Client Démo',
-                'password' => bcrypt('password123'),
-                'telephone' => '+241 07 00 00 03',
-                'role' => 'client',
-            ],
-        );
+        $this->seedUtilisateurs();
 
         $agency = Agency::firstOrCreate(
             ['nom' => 'Major Transport'],
@@ -112,5 +84,86 @@ class DatabaseSeeder extends Seeder
                 }
             }
         }
+    }
+
+    private function seedUtilisateurs(): void
+    {
+        if (app()->environment('production')) {
+            $adminEmail = config('app.admin_email');
+            $adminPassword = config('app.admin_password');
+            $controleurEmail = config('app.controleur_email');
+            $controleurPassword = config('app.controleur_password');
+
+            $this->creerCompte($adminEmail, $adminPassword, 'Administrateur', 'admin');
+            $this->creerCompte($controleurEmail, $controleurPassword, 'Contrôleur', 'controleur');
+
+            $supprimer = [
+                'admin@transportbus.ga',
+                'controleur@transportbus.ga',
+                'client@transportbus.ga',
+            ];
+            $remplacements = [];
+
+            if ($adminEmail && $adminPassword) {
+                $remplacements[] = $adminEmail;
+            }
+
+            if ($controleurEmail && $controleurPassword) {
+                $remplacements[] = $controleurEmail;
+            }
+
+            User::query()
+                ->whereIn('email', $supprimer)
+                ->whereNotIn('email', $remplacements)
+                ->delete();
+
+            return;
+        }
+
+        User::updateOrCreate(
+            ['email' => 'admin@transportbus.ga'],
+            [
+                'name' => 'Administrateur Principal',
+                'password' => bcrypt('password123'),
+                'telephone' => '+241 07 00 00 01',
+                'role' => 'admin',
+            ],
+        );
+
+        User::updateOrCreate(
+            ['email' => 'controleur@transportbus.ga'],
+            [
+                'name' => 'Contrôleur Major Transport',
+                'password' => bcrypt('password123'),
+                'telephone' => '+241 07 00 00 02',
+                'role' => 'controleur',
+            ],
+        );
+
+        User::updateOrCreate(
+            ['email' => 'client@transportbus.ga'],
+            [
+                'name' => 'Client Démo',
+                'password' => bcrypt('password123'),
+                'telephone' => '+241 07 00 00 03',
+                'role' => 'client',
+            ],
+        );
+    }
+
+    private function creerCompte(?string $email, ?string $password, string $name, string $role): void
+    {
+        if (! $email || ! $password) {
+            return;
+        }
+
+        User::updateOrCreate(
+            ['email' => $email],
+            [
+                'name' => $name,
+                'password' => $password,
+                'role' => $role,
+            ],
+        );
     }
 }

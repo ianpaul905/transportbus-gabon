@@ -73,7 +73,7 @@
                     <td>{{ $t->bus->immatriculation }} <span class="muted">({{ $t->placesRestantes() }}/{{ $t->bus->nombre_places }})</span></td>
                     <td>
                         <form method="POST" action="{{ route('admin.trajets.destroy', $t->id) }}"
-                              onsubmit="return confirm('Supprimer ce trajet ?');">
+                              data-confirm="Supprimer ce trajet ?">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-rouge" style="padding:0.3rem 0.7rem">Supprimer</button>

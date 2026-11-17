@@ -4,33 +4,38 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ControleurController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LegalController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ReservationController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::post('/recherche', [HomeController::class, 'rechercher'])->name('recherche');
+Route::post('/recherche', [HomeController::class, 'rechercher'])->middleware('throttle:30,1')->name('recherche');
+
+Route::get('/mentions-legales', [LegalController::class, 'mentions'])->name('legal.mentions');
+Route::get('/conditions-generales', [LegalController::class, 'cgv'])->name('legal.cgv');
+Route::get('/confidentialite', [LegalController::class, 'confidentialite'])->name('legal.confidentialite');
 
 // Authentification
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:6,1');
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:6,1');
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
 // Réservation
 Route::get('/reserver', [ReservationController::class, 'create'])->name('reservation.create');
-Route::post('/reservations', [ReservationController::class, 'store'])->name('reservation.store');
+Route::post('/reservations', [ReservationController::class, 'store'])->middleware('throttle:10,1')->name('reservation.store');
 
 // Paiement
 Route::name('payment.')
     ->group(function () {
         Route::get('/paiement/{reservation}', [PaymentController::class, 'form'])->name('form');
-        Route::post('/paiement/{reservation}/initier', [PaymentController::class, 'initier'])->name('initier');
+        Route::post('/paiement/{reservation}/initier', [PaymentController::class, 'initier'])->middleware('throttle:10,1')->name('initier');
         Route::post('/paiement/{reservation}/confirmer', [PaymentController::class, 'confirmer'])->name('confirmer');
         Route::get('/ebillet/{reservation}', [PaymentController::class, 'eBillet'])->name('ebillet');
     });

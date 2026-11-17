@@ -60,7 +60,10 @@
 
 <footer>
     TransportBus Gabon — Application de réservation de billets interurbains avec paiement Mobile Money.<br>
-    Projet DUT Génie Logiciel — I.S.T Libreville © {{ date('Y') }}
+    Projet DUT Génie Logiciel — I.S.T Libreville © {{ date('Y') }}<br>
+    <a href="{{ route('legal.mentions') }}">Mentions légales</a> ·
+    <a href="{{ route('legal.cgv') }}">Conditions générales</a> ·
+    <a href="{{ route('legal.confidentialite') }}">Confidentialité</a>
 </footer>
 </body>
 </html>

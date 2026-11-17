@@ -127,14 +127,14 @@ Sortie : `Cas 1 … Cas 6` avec `[PASS]`/`[FAIL]` et un bilan final.
 
 ```
 app/                     code applicatif
-  Http/Controllers/      Home, Auth, Reservation, Payment, Admin, Controleur
+  Http/Controllers/      Home, Auth, Reservation, Payment, Admin, Controleur, Legal
   Models/                Agency, Bus, Trip, Reservation, Payment, User
   Services/              QrCodeService, MobileMoneyService, AlternativeDatesService
-  Http/Middleware/       RoleMiddleware
+  Http/Middleware/       RoleMiddleware, SecurityHeaders
 database/
   migrations/            5 entités + users/cache/jobs
   seeders/               DatabaseSeeder (comptes, agences, bus, trajets)
-resources/views/         vues Blade (client, admin, contrôleur)
+resources/views/         vues Blade (client, admin, contrôleur, legal)
 routes/web.php           routes publiques + espaces protégés par rôle
 functional-test.php      tests fonctionnels autonomes
 ```
@@ -153,7 +153,10 @@ Le projet contient un **Dockerfile** (PHP 8.2 + Apache + extensions MySQL/Postgr
    - la base **PostgreSQL** `transportbus-db` (gratuite, plan free).
 4. Renseigner `APP_URL` (l'URL `*.onrender.com` donnée) et, au premier déploiement, `APP_KEY`.
    - L'entrypoint génère la clé et lance `php artisan migrate --force` automatiquement.
-5. **Manual Deploy → Deploy branch** → attendre le build, puis ouvrir l'URL.
+5. Définir les variables `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `CONTROLEUR_EMAIL` et `CONTROLEUR_PASSWORD` dans le dashboard Render.
+   - Elles remplacent les comptes de démonstration, supprimés automatiquement en production.
+   - `SESSION_SECURE_COOKIE=true` et les en-têtes de sécurité sont déjà configurés dans `render.yaml`.
+6. **Manual Deploy → Deploy branch** → attendre le build, puis ouvrir l'URL.
 
 ### Choix de la base
 - En local / mémoire : **MySQL 8.4** (`.env` = `DB_CONNECTION=mysql`).
@@ -164,5 +167,9 @@ Le projet contient un **Dockerfile** (PHP 8.2 + Apache + extensions MySQL/Postgr
 ## Notes
 
 - Le paiement Mobile Money est une **simulation** (conforme au mémoire : intégration en environnement de simulation, en attendant un partenariat opérateur réel).
-- Mot de passe hachés (`bcrypt`) via Laravel.
+- Mots de passe hachés (`bcrypt`) via Laravel.
 - Validation systématique des formulaires, `CSRF` actif, requêtes sécurisées (Eloquent).
+- Limitation du nombre de tentatives (`throttle`) sur la recherche, la connexion, l'inscription, la réservation et l'initiation du paiement.
+- Accès au paiement et à l'e-billet réservé au propriétaire, à la session courante ou à un membre de l'équipe.
+- En-têtes de sécurité (HSTS, CSP, `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`) activés en production.
+- Pages **Mentions légales**, **Conditions générales** et **Confidentialité** accessibles depuis le pied de page.

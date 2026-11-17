@@ -40,16 +40,4 @@
         <button type="submit" class="btn btn-lg mt-2">Continuer vers le paiement</button>
     </form>
 </div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const input = document.getElementById('nombre_places');
-    const total = document.getElementById('total');
-    input.addEventListener('input', function () {
-        const prix = parseFloat(total.dataset.prix);
-        const qte = parseInt(input.value) || 1;
-        total.innerHTML = 'Total : <strong>' + (prix * qte).toLocaleString('fr-FR') + ' FCFA</strong>';
-    });
-});
-</script>
 @endsection

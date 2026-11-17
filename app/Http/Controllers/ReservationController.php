@@ -48,6 +48,8 @@ class ReservationController extends Controller
 
         $reservation = Reservation::create($validated);
 
+        $request->session()->push('reservations', $reservation->id);
+
         return redirect()->route('payment.form', ['reservation' => $reservation->id]);
     }
 }
